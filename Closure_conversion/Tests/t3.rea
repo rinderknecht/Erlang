@@ -1,0 +1,4 @@
+-module(t3).
+-compile(export_all).
+task
+t3({}, N) -> N + 1.

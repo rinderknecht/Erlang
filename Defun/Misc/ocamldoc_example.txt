@@ -1,0 +1,1 @@
+ocamldoc -html -d doc -I _i686 -css-style ocaml.css ast.mli

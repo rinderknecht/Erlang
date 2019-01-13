@@ -1,0 +1,28 @@
+Spec ::= FunSpec | TypeSpec
+
+FunSpec ::= "-spec" atom Ftype "."
+
+Ftype ::= "(" [Tlist] ")" "->" Type
+
+Tlist ::= Type | Type "," Tlist
+
+Type ::= "any()" | "float()" | "integer()" | "char()" | "string()"
+       | "boolean()" | Fun | List | Tuple | Ptype
+
+Fun ::= "fun" "(" Ftype ")"
+
+List ::= "list" "(" Type ")"
+
+Tuple ::= "{" Tlist "}"
+
+Ptype ::= atom "(" [Tvar] ")"
+
+Tvar ::= var | var "," Tvar
+
+TypeSpec ::= "-type" Ptype "::" Texpr "."
+
+Texpr ::= Type | Tsum
+
+Tsum ::= Const | Const "|" Tsum
+
+Const ::= "{" atom, Tlist "}" | atom

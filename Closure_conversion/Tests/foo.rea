@@ -1,0 +1,10 @@
+-module(foo).
+-compile(export_all).
+
+task
+t(0) -> task(N) -> N + 1 end;
+t(X) -> A=1, B=2,
+        task(X) -> task(Y) -> log(X) + Y * A * B end end.
+
+log(X) -> trunc(X).
+trunc(X) -> X.
