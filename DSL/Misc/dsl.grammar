@@ -1,0 +1,152 @@
+functions -> function dot functions
+functions ->
+
+function -> function_clauses
+
+function_clauses -> function_clause
+function_clauses -> function_clause ';' function_clauses
+
+function_clause -> atom clause_args clause_guard clause_body
+
+clause_args -> argument_list
+
+clause_guard -> ['when' guard]
+
+clause_body -> '->' exprs '.'
+
+expr -> 'catch' expr
+expr -> expr_100
+
+expr_100 -> expr_150 '=' expr_100
+expr_100 -> expr_150
+
+expr_150 -> expr_160 'orelse' expr_150
+expr_150 -> expr_160
+
+expr_160 -> expr_200 'andalso' expr_160
+expr_160 -> expr_200
+
+expr_200 -> expr_300 comp_op expr_300
+expr_200 -> expr_300
+
+expr_300 -> expr_400 list_op expr_300
+expr_300 -> expr_400
+
+expr_400 -> expr_400 add_op expr_500
+expr_400 -> expr_500
+
+expr_500 -> expr_500 mult_op expr_600
+expr_500 -> expr_600
+
+expr_600 -> prefix_op expr_700
+expr_600 -> expr_700
+
+expr_700 -> function_call
+expr_700 -> expr_800
+
+expr_800 -> expr_900 ':' expr_max
+expr_800 -> expr_900
+
+expr_900 -> expr_max
+
+expr_max -> var
+expr_max -> atomic
+expr_max -> list
+expr_max -> tuple
+expr_max -> '(' expr ')'
+expr_max -> 'begin' exprs 'end'
+expr_max -> if_expr
+expr_max -> case_expr
+expr_max -> fun_expr
+expr_max -> try_expr
+
+list -> '[' ']'
+list -> '[' expr tail
+
+tail -> ']'
+tail -> '|' expr ']'
+tail -> ',' expr tail
+
+tuple -> '{' '}'
+tuple -> '{' exprs '}'
+
+function_call -> expr_800 argument_list
+
+if_expr -> 'if' if_clauses 'end'
+
+if_clauses -> if_clause
+if_clauses -> if_clause ';' if_clauses
+
+if_clause -> guard clause_body
+
+case_expr -> 'case' expr 'of' cr_clauses 'end'
+
+cr_clauses -> cr_clause
+cr_clauses -> cr_clause ';' cr_clauses
+
+cr_clause -> expr clause_guard clause_body
+
+fun_expr -> 'fun' atom '/' integer
+fun_expr -> 'fun' atom ':' atom '/' integer
+fun_expr -> 'fun' fun_clauses 'end'
+
+fun_clauses -> fun_clause
+fun_clauses -> fun_clause ';' fun_clauses
+
+fun_clause -> argument_list clause_guard clause_body
+
+try_expr -> 'try' exprs 'of' cr_clauses try_catch
+try_expr -> 'try' exprs try_catch
+
+try_catch -> 'catch' try_clauses 'end'
+try_catch -> 'catch' try_clauses 'after' exprs 'end'
+try_catch -> 'after' exprs 'end'
+
+try_clauses -> try_clause
+try_clauses -> try_clause ';' try_clauses
+
+try_clause -> expr clause_guard clause_body
+try_clause -> atom ':' expr clause_guard clause_body
+try_clause -> var ':' expr clause_guard clause_body
+
+argument_list -> '(' ')'
+argument_list -> '(' exprs ')'
+
+exprs -> expr
+exprs -> expr ',' exprs
+
+guard -> exprs
+guard -> exprs ';' guard
+
+atomic -> char
+atomic -> integer
+atomic -> float
+atomic -> atom
+atomic -> strings
+
+strings -> string
+strings -> string strings
+
+prefix_op -> '+'
+prefix_op -> '-'
+prefix_op -> 'not'
+
+mult_op -> '/'
+mult_op -> '*'
+mult_op -> 'div'
+mult_op -> 'rem'
+mult_op -> 'and'
+
+add_op -> '+'
+add_op -> '-'
+add_op -> 'or'
+add_op -> 'xor'
+
+list_op -> '++'
+
+comp_op -> '=<'
+comp_op -> '<'
+comp_op -> '>='
+comp_op -> '>'
+comp_op -> '=/='
+comp_op -> '=:='

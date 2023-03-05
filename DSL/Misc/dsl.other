@@ -1,0 +1,195 @@
+form -> attribute dot.
+
+attribute -> '-' atom attr_val.
+attribute -> '-' atom typed_attr_val.
+attribute -> '-' atom '(' typed_attr_val ')'.
+attribute -> '-' 'spec' type_spec.
+
+atom1 -> 'spec'.
+
+type_spec -> spec_fun type_sigs.
+type_spec -> '(' spec_fun type_sigs ')'.
+
+spec_fun ->                            atom1.
+spec_fun ->                  atom1 ':' atom1.
+spec_fun ->           atom1 '/' integer '::'.
+spec_fun -> atom1 ':' atom1 '/' integer '::'.
+
+typed_attr_val -> expr ',' typed_record_fields.
+typed_attr_val -> expr '::' top_type.
+
+typed_record_fields -> '{' typed_exprs '}'.
+
+typed_exprs -> typed_expr.
+typed_exprs -> typed_expr ',' typed_exprs.
+typed_exprs -> expr ',' typed_exprs.
+typed_exprs -> typed_expr ',' exprs.
+
+typed_expr -> expr '::' top_type.
+
+type_sigs -> type_sig.
+type_sigs -> type_sig ';' type_sigs.
+
+type_sig -> fun_type.
+type_sig -> fun_type 'when' type_guards.
+
+type_guards -> type_guard.
+type_guards -> type_guard ',' type_guards.
+
+type_guard -> atom1 '(' top_types ')'.
+
+top_types -> top_type.
+top_types -> top_type ',' top_types.
+
+top_type -> var '::' top_type_100.
+top_type -> top_type_100.
+
+top_type_100 -> type.
+top_type_100 -> type '|' top_type_100.
+
+type -> '(' top_type ')'.
+type -> var.
+type -> atom1.
+type -> atom1 '(' ')'.
+type -> atom1 '(' top_types ')'.
+type -> atom1 ':' atom1 '(' ')'.
+type -> atom1 ':' atom1 '(' top_types ')'.
+type -> '[' ']'.
+type -> '[' top_type ']'.
+type -> '[' top_type ',' '.' '.' '.' ']'.
+type -> '{' '}'.
+type -> '{' top_types '}'.
+type -> '#' atom1 '{' '}'.
+type -> '#' atom1 '{' field_types '}'.
+type -> binary_type.
+type -> int_type.
+type -> int_type '.' '.' int_type.
+type -> 'fun' '(' ')'.
+type -> 'fun' '(' fun_type_100 ')'.
+
+int_type -> integer.
+int_type -> '-' integer.
+
+fun_type_100 -> '(' '.' '.' '.' ')' '->' top_type.
+fun_type_100 -> fun_type.
+
+fun_type -> '(' ')' '->' top_type.
+fun_type -> '(' top_types ')' '->' top_type.
+
+field_types -> field_type.
+field_types -> field_type ',' field_types.
+
+field_type -> atom1 '::' top_type.
+
+binary_type -> '<<' '>>'.
+binary_type -> '<<' bin_base_type '>>'.
+binary_type -> '<<' bin_unit_type '>>'.
+binary_type -> '<<' bin_base_type ',' bin_unit_type '>>'.
+
+bin_base_type -> var ':' integer.
+
+bin_unit_type -> var ':' var '*' integer.
+
+attr_val -> expr.
+attr_val -> expr ',' exprs.
+attr_val -> '(' expr ',' exprs ')'.
+
+expr_max -> binary.
+
+binary -> '<<' '>>'.
+binary -> '<<' bin_elements '>>'.
+
+bin_elements -> bin_element.
+bin_elements -> bin_element ',' bin_elements.
+
+bin_element -> bit_expr opt_bit_size_expr opt_bit_type_list.
+
+bit_expr -> prefix_op expr_max.
+bit_expr -> expr_max.
+
+opt_bit_size_expr -> ':' bit_size_expr.
+opt_bit_size_expr -> '$empty'.
+
+opt_bit_type_list -> '/' bit_type_list.
+opt_bit_type_list -> '$empty'.
+
+bit_type_list -> bit_type '-' bit_type_list.
+bit_type_list -> bit_type.
+
+bit_type -> atom1.
+bit_type -> atom1 ':' integer.
+
+bit_size_expr -> expr_max.
+
+expr_max -> list_comprehension.
+list_comprehension -> '[' expr '||' lc_exprs ']'.
+binary_comprehension -> '<<' binary '||' lc_exprs '>>'.
+lc_exprs -> lc_expr.
+lc_exprs -> lc_expr ',' lc_exprs.
+
+lc_expr -> expr.
+lc_expr -> expr '<-' expr.
+lc_expr -> binary '<=' expr.
+
+expr_max -> query_expr.
+query_expr -> 'query' list_comprehension 'end'.
+
+%%expr_max -> cond_expr.
+
+
+expr_max -> receive_expr.
+
+receive_expr -> 'receive' cr_clauses 'end'.
+receive_expr -> 'receive' 'after' expr clause_body 'end'.
+receive_expr -> 'receive' cr_clauses 'after' expr clause_body 'end'.
+
+expr_700 -> record_expr.
+
+record_expr -> '#' atom1 '.' atom1.
+record_expr -> '#' atom1 record_tuple.
+record_expr -> expr_max '#' atom1 '.' atom1.
+record_expr -> expr_max '#' atom1 record_tuple.
+
+record_tuple -> '{' '}'.
+record_tuple -> '{' record_fields '}'.
+
+record_fields -> record_field.
+record_fields -> record_field ',' record_fields.
+
+record_field -> var '=' expr.
+record_field -> atom1 '=' expr.
+
+form -> rule dot.
+
+rule -> rule_clauses.
+
+rule_clauses -> rule_clause.
+rule_clauses -> rule_clause ';' rule_clauses.
+
+rule_clause -> atom1 clause_args clause_guard rule_body.
+
+rule_body -> ':-' lc_exprs.
+
+%%expr_max -> struct
+
+expr_max -> binary_comprehension
+
+expr_100 -> expr_150 '!' expr_100
+
+mult_op -> 'band'
+add_op -> 'bor'
+add_op -> 'bxor'
+add_op -> 'bsl'
+add_op -> 'bsr'
+list_op -> '--'
+
+comp_op -> '=='
+comp_op -> '/='
+
+prefix_op -> 'bnot'
+
+expr_900 -> '.' atom1
+expr_900 -> expr_900 '.' atom1
+
+mult_op -> 'and'
+add_op -> 'or'
